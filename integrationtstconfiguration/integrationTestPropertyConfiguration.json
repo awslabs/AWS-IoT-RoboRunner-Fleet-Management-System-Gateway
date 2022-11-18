@@ -1,0 +1,15 @@
+{
+    "integrationTestPropertyConfiguration": [
+    {
+      "fleetType": "MIR",
+      "testMissionIds": {
+        "moveToPositionA": "<guid of prior created mission",
+        "moveToPositionB": "<guid of prior created mission",
+        "moveToPositionC":  "<guid of prior created mission"
+      },
+      "coordinatesComparisonAllowedErrorInMeters": 0.1,
+      "orientationComparisonAllowedErrorInDegrees": 2.0,
+      "workerUpdatePeriodInSeconds":  5,
+      "workerUpdateAllowedDelayInSeconds": 5
+    }]
+}

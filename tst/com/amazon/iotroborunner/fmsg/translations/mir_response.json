@@ -1,0 +1,119 @@
+{
+    "status": {
+      "joystick_low_speed_mode_enabled": false,
+      "mode_id": 7,
+      "moved": 616.4731223182027,
+      "mission_queue_id": 0,
+      "header": {
+        "stamp": {
+          "secs": 0,
+          "nsecs": 0
+        },
+        "frame_id": "",
+        "seq": 0
+      },
+      "robot_name": "IntegTestRobot_Gamma",
+      "uptime": 4283889,
+      "errors": [
+        {
+          "nolog": false,
+          "timestamp": {
+            "secs": 0,
+            "nsecs": 0
+          },
+          "code": 501,
+          "description": "Battery is TOO low.",
+          "module": "/Power System/Battery"
+        }
+      ],
+      "unloaded_map_changes": false,
+      "distance_to_next_target": 0,
+      "battery_voltage": 0,
+      "mode_key_state": "idle",
+      "battery_percentage": 1,
+      "map_id": "00d9d9ec-82f3-11ec-9c73-06114c0c0c0d",
+      "software_version": "2.13.0-7-g59bb1c9c6460.beta-AWS_bho",
+      "safety_system_muted": false,
+      "mission_text": "Waiting for new missions...",
+      "velocity": {
+        "linear": 0,
+        "angular": 0
+      },
+      "state_text": "Error",
+      "position": {
+        "y": 10.37197494506836,
+        "x": 22.377197265625,
+        "orientation": -0.4605743885040283
+      },
+      "footprint": "[[0.506,-0.32],[0.506,0.32],[-0.454,0.32],[-0.454,-0.32]]",
+      "user_prompt": {
+        "question": "",
+        "has_request": false,
+        "timeout": {
+          "secs": 0,
+          "nsecs": 0
+        },
+        "user_group": "",
+        "guid": "",
+        "options": []
+      },
+      "mode_text": "Mission",
+      "hook_status": {
+        "trolley": {
+          "width": 0,
+          "length": 0,
+          "offset_locked_wheels": 0,
+          "id": 0,
+          "height": 0
+        },
+        "available": false,
+        "trolley_attached": false
+      },
+      "session_id": "2934601d-48ef-4f31-82dc-9c531f762aa8",
+      "joystick_web_session_id": "",
+      "hook_data": {
+        "angle": {
+          "timestamp": {
+            "secs": 0,
+            "nsecs": 0
+          },
+          "angle": 0
+        },
+        "height_state": 0,
+        "brake_state": 0,
+        "height": 0,
+        "length": 0,
+        "gripper_state": 0
+      },
+      "battery_time_remaining": 1429,
+      "state_id": 12
+    },
+    "fleet_state_text": "error",
+    "allowed_methods": [
+      "PUT",
+      "GET",
+      "DELETE"
+    ],
+    "description": "",
+    "ip": "54.87.253.164",
+    "factory_reset_needed": false,
+    "created_by_id": "mirconst-guid-0000-0005-users0000000",
+    "operation_mode_info": {
+      "synchronization_enabled": true,
+      "mission_scheduling_enabled": true,
+      "resource_management_enabled": true,
+      "initial_synchronization_enabled": false,
+      "collision_avoidance_enabled": true,
+      "mode_name": "ActiveMode",
+      "charging_staging_enabled": true,
+      "communicator_enabled": true
+    },
+    "created_by": "/v2.0.0/users/mirconst-guid-0000-0005-users0000000",
+    "fleet_state": 5,
+    "created_by_name": "Administrator",
+    "active": true,
+    "serial_number": "",
+    "robot_group_id": 7,
+    "id": 7,
+    "robot_model": "MiR100"
+}

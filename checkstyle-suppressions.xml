@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <suppress files="." checks="JavadocPackage"/>
+    <suppress files="." checks="AvoidInlineConditionals"/> <!-- Ternary logic is acceptable. -->
+    <suppress files="tst" checks="JavadocMethod"/> <!-- Tests do not need Javadoc comments -->
+</suppressions>

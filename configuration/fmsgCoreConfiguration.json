@@ -1,0 +1,9 @@
+{
+    "fmsgCoreConfiguration": {
+        "siteArn": "<enter site ARN here>",
+        "enableWorkerPropertyUpdates": false,
+        "enableSpaceManagement": false,
+        "maximumSharedSpaceCrossingTime": 300,
+        "vendorSharedSpacePollingInterval": 3
+	}
+}

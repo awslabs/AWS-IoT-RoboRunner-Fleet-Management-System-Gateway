@@ -1,0 +1,8 @@
+{
+    "fmsgCoreConfiguration": {
+        "siteArn": "arn:aws:iotroborunner:eu-central-1:accountId:site/7ba753d4-d764-4f5d-b762-98f924ba5ce9",
+        "enableWorkerPropertyUpdates": true,
+        "maximumSharedSpaceCrossingTime": 200,
+        "vendorSharedSpacePollingInterval": 5
+	}
+}

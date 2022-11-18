@@ -1,0 +1,14 @@
+{
+	"fmsgConnectorConfiguration": [
+		{
+			"fleetType": "MIR",
+			"workerFleetArn": "arn:aws:iotroborunner:eu-central-1:accountId:site/7ba753d4-d764-4f5d-b762-98f924ba5ce9/worker-fleet/f6749edd-54c8-4510-8a14-868d73bff031",
+			"apiEndpoint": "http://example.com/api/v2.0.0",
+			"apiSecretName": "MirSecretString",
+			"additionalConfiguration": {
+				"additionalStuff": "SecretString"
+			},
+			"enableConnector": false
+		}
+	]
+}
