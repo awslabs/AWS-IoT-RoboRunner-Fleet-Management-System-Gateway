@@ -1,0 +1,45 @@
+{
+    "map": "/v2.0.0/maps/900de3cd-82aa-11ec-ad18-0242ac110002",
+    "map_id": "900de3cd-82aa-11ec-ad18-0242ac110002",
+    "name": "intersectionNorth",
+    "type_id": 103,
+    "created_by_name": "Distributor",
+    "created_by": "/v2.0.0/users/mirconst-guid-0000-0004-users0000000",
+    "actions": [
+      {
+        "guid": "192160b8-82af-11ec-b5eb-06114c0c0c0d",
+        "type": "Limit-robots",
+        "parameters": [
+          {
+            "guid": "19219772-82af-11ec-b5eb-06114c0c0c0d",
+            "name": "limit",
+            "value": "1"
+          }
+        ],
+        "type_id": 8
+      }
+    ],
+    "created_by_id": "mirconst-guid-0000-0004-users0000000",
+    "guid": "19213dc5-82af-11ec-9c73-06114c0c0c0d",
+    "allowed_methods": [
+      "GET"
+    ],
+    "polygon": [
+      {
+        "y": 74.3,
+        "x": 49.15
+      },
+      {
+        "y": 74.2,
+        "x": 64.9
+      },
+      {
+        "y": 58.3,
+        "x": 62.35
+      },
+      {
+        "y": 59.3,
+        "x": 77.7
+      }
+    ]
+  }

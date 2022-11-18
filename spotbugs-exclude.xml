@@ -1,0 +1,19 @@
+<FindBugsFilter>
+    <!-- https://github.com/spotbugs/spotbugs/issues/756 -->
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    </Match>
+
+    <!-- We are throwing RuntimeExceptions until we have application-sepcific exceptions defined. -->
+    <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_RUNTIMEEXCEPTION"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_THROWABLE"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+    </Match>
+</FindBugsFilter>

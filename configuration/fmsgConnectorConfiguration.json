@@ -1,0 +1,21 @@
+{
+    "fmsgConnectorConfiguration": [
+        {
+          "fleetType": "MIR",
+          "workerFleetArn": "<enter your WorkerFleet ARN here>",
+          "apiEndpoint": "<enter your FMS API endpoint here>",
+          "apiSecretName": "<enter your secret name here>",
+          "additionalConfiguration": {
+            "optional additional configuration key": "optional additional configuration value"
+          },
+          "enableConnector": false
+        },
+        {
+          "fleetType": "SIMULATED",
+          "workerFleetArn": "<enter your WorkerFleet ARN here>",
+          "apiEndpoint": "N/A",
+          "apiSecretName": "N/A",
+          "enableConnector": false
+        }
+    ]
+}

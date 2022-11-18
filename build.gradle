@@ -1,0 +1,249 @@
+plugins {
+  // Java for compiling of Java source files. Read more at:
+  // https://docs.gradle.org/current/userguide/java_plugin.html
+  id 'java'
+
+  // Checkstyle for style checks and reports on Java source files. Read more at:
+  // https://docs.gradle.org/current/userguide/checkstyle_plugin.html
+  id 'checkstyle'
+
+  // JvmTestSuite for unit and integration testing. Read more at:
+  // https://docs.gradle.org/current/userguide/jvm_test_suite_plugin.html
+  id 'jvm-test-suite'
+
+  // JaCoCo for coverage metrics and reports of Java source files. Read more at:
+  // https://docs.gradle.org/current/userguide/jacoco_plugin.html
+  id 'jacoco-report-aggregation'
+
+  // SpotBugs for quality checks and reports of source files. Read more at:
+  // https://spotbugs.readthedocs.io/en/stable/gradle.html
+  id "com.github.spotbugs" version "5.0.+"
+
+  // GradleShadow for building a single fat jar instead of looking for individual jars
+  // https://imperceptiblethoughts.com/shadow/introduction/
+  id 'com.github.johnrengelman.shadow' version '7.1.+'
+
+  // Task Tree for seeing the task tree gradle uses when building
+  // https://github.com/dorongold/gradle-task-tree
+  id "com.dorongold.task-tree" version "2.1.0"
+
+  // Test Logger helps to visualize the test results in the console
+  // https://github.com/radarsh/gradle-test-logger-plugin
+  id 'com.adarshr.test-logger' version '3.2.0'
+}
+
+/*
+ Set the java version to 17.
+*/
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+/*
+ Set where to search for the dependencies.
+ Gradle will search these repos to find the dependencies.
+*/
+repositories {
+    maven {
+        url "https://repo.osgeo.org/repository/release/"
+    }
+  mavenCentral()
+  mavenLocal()
+}
+
+/*
+ Setting up wrapper to be used with building and testing as it will  provide
+ a stable and consistent development environment when it comes to versioning.
+ See more: https://docs.gradle.org/current/userguide/gradle_wrapper.html
+*/
+tasks.named('wrapper') {
+  gradleVersion = '7.5.1';
+  distributionType = Wrapper.DistributionType.ALL
+}
+
+/*
+ List of the dependencies used in this application.
+*/
+dependencies {
+  implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.+')
+  implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.+'
+  implementation 'com.amazonaws:aws-java-sdk-iotroborunner:3.0.+'
+  implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.12.+'
+
+  implementation 'com.fasterxml.jackson.core:jackson-core:2.12.+'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.+'
+
+  implementation 'org.boofcv:boofcv-core:0.40.+'
+
+  implementation 'org.apache.logging.log4j:log4j-core:2.+'
+  implementation 'org.apache.logging.log4j:log4j-api:2.+'
+
+  implementation 'javax.annotation:javax.annotation-api:1.+'
+
+  implementation 'org.apache.commons:commons-lang3:3.+'
+  implementation 'commons-validator:commons-validator:1.+'
+
+  implementation 'com.github.spotbugs:spotbugs-annotations:4.+'
+
+  testImplementation 'org.mockito:mockito-junit-jupiter:4.7.+'
+  testImplementation 'org.mockito:mockito-core:4.7.+'
+  testRuntimeOnly 'org.mockito:mockito-inline:4.7.+'
+
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+  compileOnly 'org.projectlombok:lombok:1.18.+'
+  annotationProcessor 'org.projectlombok:lombok:1.18.+'
+  testCompileOnly 'org.projectlombok:lombok:1.18.+'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.+'
+
+  implementation 'org.locationtech.jts:jts-core:1.19.+'
+  implementation 'org.geotools:gt-main:27.+'
+}
+
+/*
+ Unit test and integration test suites setup.
+*/
+testing {
+  suites {
+    test {
+      useJUnitJupiter('5.8.2')
+
+      reporting {
+        reports {
+          testCodeCoverageReport(JacocoCoverageReport) {
+            testType = TestSuiteType.UNIT_TEST
+          }
+        }
+      }
+    }
+
+    integrationTest(JvmTestSuite) {
+      testType = TestSuiteType.INTEGRATION_TEST
+
+
+      dependencies {
+        // Adds a dependency on the src code of the application to the integrationTest suite targets.
+        // By default, only the built-in test suite will automatically have a dependency on the src code.
+        implementation project
+        implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.+'
+        implementation 'com.amazonaws:aws-java-sdk-iotroborunner:3.0.+'
+        implementation 'org.apache.commons:commons-lang3:3.+'
+        implementation 'org.locationtech.jts:jts-core:1.19.+'
+
+        compileOnly 'org.projectlombok:lombok:1.18.+'
+        annotationProcessor 'org.projectlombok:lombok:1.18.+'
+      }
+
+      targets {
+        all {
+          testTask.configure {
+            shouldRunAfter(test)
+          }
+        }
+      }
+    }
+  }
+}
+
+/*
+ Turn on the standard stream outputs for both unit and integration testing.
+*/
+testlogger {
+  showStandardStreams true
+}
+
+/*
+ Set the source and test directories.
+*/
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.test.java.srcDirs = ['tst']
+sourceSets.integrationTest.java.srcDirs = ['integrationTst']
+sourceSets.integrationTest.compileClasspath += sourceSets.main.output
+sourceSets.integrationTest.runtimeClasspath += sourceSets.main.output
+
+/*
+ Configures the Checkstyle "checkstyle" plugin.
+*/
+checkstyle {
+  toolVersion = "10.+"
+  ignoreFailures = false
+  maxWarnings = 0
+  maxErrors = 0
+  configDirectory = rootProject.file("${rootDir}")
+  configFile = file("checkstyle-rules.xml")
+}
+
+checkstyleMain {
+  source = sourceSets.main.allSource
+  dependsOn spotbugsMain
+  dependsOn spotbugsTest
+  dependsOn spotbugsIntegrationTest
+  dependsOn shadowJar
+  dependsOn jacocoTestReport
+  dependsOn jacocoTestCoverageVerification
+}
+
+checkstyleTest {
+  source = sourceSets.test.allSource
+  dependsOn checkstyleMain
+}
+
+checkstyleIntegrationTest {
+  source = sourceSets.integrationTest.allSource
+  dependsOn checkstyleTest
+}
+
+/*
+ Configures the SpotBugs "com.github.spotbugs" plugin.
+*/
+spotbugs {
+  ignoreFailures = false
+  effort = 'max'
+  showProgress = true
+  excludeFilter = file("spotbugs-exclude.xml")
+}
+
+/*
+ Set the JaCoCo minimum coverage limit.
+*/
+jacocoTestCoverageVerification {
+  violationRules {
+    rule {
+      limit {
+        minimum = 0.8
+      }
+    }
+  }
+}
+
+/*
+ Adding the coverage verification to check task to enforce the minimum.
+*/
+check.dependsOn jacocoTestCoverageVerification
+
+/*
+  Configure Shadow Jar - Single Jar that contains all dependent libraries
+*/
+jar.enabled = false
+build.dependsOn shadowJar
+
+shadowJar {
+  archiveBaseName = 'RoboRunnerFmsGateway'
+  // Don't append "-all" to the jar name
+  archiveClassifier = ''
+
+  // To avoid log4j2 library build error:
+  // ERROR StatusLogger Unrecognized conversion specifier [logger] starting at position 47 in conversion pattern.
+  transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
+
+  manifest {
+    attributes 'Main-Class': 'com.amazon.iotroborunner.fmsg.FmsGatewayMain'
+    // To fix log4j2 warning:
+    // WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.
+    attributes 'Multi-Release': 'true'
+  }
+}

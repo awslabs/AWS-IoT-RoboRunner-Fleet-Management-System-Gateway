@@ -1,0 +1,108 @@
+{
+    "status": {
+      "joystick_low_speed_mode_enabled": false,
+      "mode_id": 7,
+      "moved": 28.67806328719349,
+      "mission_queue_id": 2,
+      "header": {
+        "stamp": {
+          "secs": 0,
+          "nsecs": 0
+        },
+        "frame_id": "",
+        "seq": 0
+      },
+      "robot_name": "MiR_noname",
+      "uptime": 11516140,
+      "errors": [],
+      "unloaded_map_changes": false,
+      "distance_to_next_target": 21.373031616210938,
+      "battery_voltage": 0,
+      "mode_key_state": "idle",
+      "battery_percentage": 100,
+      "map_id": "ad84fd75-ee4c-11ec-ace9-0242ac110002",
+      "software_version": "2.13.0-7-g59bb1c9c6460.beta-AWS_bho",
+      "safety_system_muted": false,
+      "mission_text": "Waiting for new missions...",
+      "velocity": {
+        "linear": 0,
+        "angular": 0
+      },
+      "state_text": "Executing",
+      "position": {
+        "y": 20.8254685401916504,
+        "x": 30.092332363128662,
+        "orientation": 146.28684997558594
+      },
+      "footprint": "[[0.506,-0.32],[0.506,0.32],[-0.454,0.32],[-0.454,-0.32]]",
+      "user_prompt": {
+        "question": "",
+        "has_request": false,
+        "timeout": {
+          "secs": 0,
+          "nsecs": 0
+        },
+        "user_group": "",
+        "guid": "",
+        "options": []
+      },
+      "mode_text": "Mission",
+      "hook_status": {
+        "trolley": {
+          "width": 0,
+          "length": 0,
+          "offset_locked_wheels": 0,
+          "id": 0,
+          "height": 0
+        },
+        "available": false,
+        "trolley_attached": false
+      },
+      "session_id": "9500f950-ee4c-11ec-ace9-0242ac110002",
+      "joystick_web_session_id": "",
+      "hook_data": {
+        "angle": {
+          "timestamp": {
+            "secs": 0,
+            "nsecs": 0
+          },
+          "angle": 0
+        },
+        "height_state": 0,
+        "brake_state": 0,
+        "height": 0,
+        "length": 0,
+        "gripper_state": 0
+      },
+      "battery_time_remaining": 136800,
+      "state_id": 5
+    },
+    "fleet_state_text": "independent mission",
+    "allowed_methods": [
+      "PUT",
+      "GET",
+      "DELETE"
+    ],
+    "description": "",
+    "ip": "3.83.96.88",
+    "factory_reset_needed": false,
+    "created_by_id": "mirconst-guid-0000-0005-users0000000",
+    "operation_mode_info": {
+      "synchronization_enabled": true,
+      "mission_scheduling_enabled": true,
+      "resource_management_enabled": true,
+      "initial_synchronization_enabled": false,
+      "collision_avoidance_enabled": true,
+      "mode_name": "ActiveMode",
+      "charging_staging_enabled": true,
+      "communicator_enabled": true
+    },
+    "created_by": "/v2.0.0/users/mirconst-guid-0000-0005-users0000000",
+    "fleet_state": 14,
+    "created_by_name": "Administrator",
+    "active": true,
+    "serial_number": "",
+    "robot_group_id": 2,
+    "id": 1,
+    "robot_model": "MiR100"
+  }

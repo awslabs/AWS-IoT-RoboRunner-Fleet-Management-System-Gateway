@@ -1,0 +1,67 @@
+{
+    "RecipeFormatVersion": "2020-01-25",
+    "ComponentName": "<NAME>",
+    "ComponentVersion": "<VERSION (for example 0.0.1)>",
+    "ComponentType": "aws.greengrass.generic",
+    "ComponentDescription": "RoboRunner FMS Gateway",
+    "ComponentPublisher": "<YOUR NAME HERE>",
+    "ComponentConfiguration": {
+      "DefaultConfiguration": {
+        "accessControl": {
+          "aws.greengrass.ipc.pubsub": {
+            "com.amazon.roborunner.fmsg:pubsub:1": {
+              "policyDescription": "Allows access to publish/subscribe to *",
+              "operations": [
+                "aws.greengrass#PublishToTopic",
+                "aws.greengrass#SubscribeToTopic"
+              ],
+              "resources": [
+                "*"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "ComponentDependencies": {
+      "aws.greengrass.TokenExchangeService": {
+        "VersionRequirement": ">=2.0.0 <3.0.0",
+        "DependencyType": "HARD"
+      }
+    },
+    "Manifests": [
+      {
+        "Platform": {
+          "os": "linux"
+        },
+        "Name": "Linux",
+        "Lifecycle": {
+          "Run": {
+            "Setenv": {
+                "FMSG_CONFIGURATION_DIRECTORY": "{artifacts:decompressedPath}/fmsg_configs/configuration"
+            },
+            "Script": "cd {artifacts:decompressedPath}/fmsg_application && java -jar RoboRunnerFmsGateway.jar"
+          }
+        },
+        "Artifacts": [
+          {
+            "URI": "s3://<S3-BUCKET-NAME>/artifacts/fmsg_application.zip",
+            "Unarchive": "ZIP",
+            "Permission": {
+              "Read": "ALL",
+              "Execute": "ALL"
+            }
+          },
+          {
+            "Uri": "s3://<S3-BUCKET-NAME>/artifacts/fmsg_configs.zip",
+            "Unarchive": "ZIP",
+            "Permission": {
+              "Read": "ALL",
+              "Execute": "ALL"
+            }
+          }
+        ]
+      }
+    ],
+    "Lifecycle": {}
+}
