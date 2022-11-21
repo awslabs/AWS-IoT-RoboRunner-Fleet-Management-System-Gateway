@@ -8,7 +8,6 @@ This package contains sample code for AWS IoT RoboRunner Fleet Management System
 
 - [Java 17 runtime environment (SE JRE)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 - [Gradle 7.3+](https://gradle.org/releases/) (the below versions won't support integration test framework)
-- [Maven 3](https://maven.apache.org/docs/history.html)
 - The Bash shell. For Linux and macOS, this is included by default. In Windows 10, you can install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to get a Windows-integrated version of Ubuntu and Bash.
 - [The AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) version 2.
 
@@ -16,22 +15,6 @@ This package contains sample code for AWS IoT RoboRunner Fleet Management System
 
 ```bash
 cli_binary_format=raw-in-base64-out
-```
-
-3. Download the AWS IoT RoboRunner SDK.
-
-```bash
-wget https://d2nqzfmshi5dyg.cloudfront.net/awsiotroborunner_java_sdk-3-0-0.zip
-```
-
-Unzip the SDK zip archive and install it in the local Maven repository.
-
-```bash
-unzip awsiotroborunner_java_sdk-3-0-0.zip
-
-cd awsiotroborunner_java_sdk-3-0-0
-
-mvn install:install-file -Dfile=aws-java-sdk-iotroborunner-3.0.0-SNAPSHOT.jar -DgroupId=com.amazonaws -DartifactId=aws-java-sdk-iotroborunner -Dversion=3.0.0-SNAPSHOT -Dpackaging=jar
 ```
 
 ## Configure

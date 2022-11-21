@@ -50,7 +50,6 @@ repositories {
         url "https://repo.osgeo.org/repository/release/"
     }
   mavenCentral()
-  mavenLocal()
 }
 
 /*
@@ -69,7 +68,7 @@ tasks.named('wrapper') {
 dependencies {
   implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.+')
   implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.+'
-  implementation 'com.amazonaws:aws-java-sdk-iotroborunner:3.0.+'
+  implementation 'com.amazonaws:aws-java-sdk-iotroborunner:1.12.+'
   implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.12.+'
 
   implementation 'com.fasterxml.jackson.core:jackson-core:2.12.+'
@@ -130,7 +129,7 @@ testing {
         // By default, only the built-in test suite will automatically have a dependency on the src code.
         implementation project
         implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.+'
-        implementation 'com.amazonaws:aws-java-sdk-iotroborunner:3.0.+'
+        implementation 'com.amazonaws:aws-java-sdk-iotroborunner:1.12.+'
         implementation 'org.apache.commons:commons-lang3:3.+'
         implementation 'org.locationtech.jts:jts-core:1.19.+'
 
