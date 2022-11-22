@@ -4,18 +4,10 @@ This package contains sample code for AWS IoT RoboRunner Fleet Management System
 
 ## Setup
 
-1. Install the required runtimes, build tools and CLI utilities:
+Install the required dependencies:
 
 - [Java 17 runtime environment (SE JRE)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 - [Gradle 7.3+](https://gradle.org/releases/) (the below versions won't support integration test framework)
-- The Bash shell. For Linux and macOS, this is included by default. In Windows 10, you can install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to get a Windows-integrated version of Ubuntu and Bash.
-- [The AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) version 2.
-
-2. Change the AWS CLI settings to enable the AWS CLI v2 to load JSON events from a file, matching the v1 behavior. Add the following to your [AWS configuration file](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) (`~/.aws/config`):
-
-```bash
-cli_binary_format=raw-in-base64-out
-```
 
 ## Configure
 
@@ -41,7 +33,7 @@ gradle wrapper
 To build/test the application with Windows, use the `./gradlew.bat` instead of `./gradlew`.
 
 ## Test
-1.Run unit tests
+1. Run unit tests
 
 ```bash
 # Run the entire test suite (these will  be executed as part of build commands as well)
