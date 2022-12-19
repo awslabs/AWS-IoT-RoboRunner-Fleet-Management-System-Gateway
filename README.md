@@ -7,7 +7,7 @@ This package contains sample code for AWS IoT RoboRunner Fleet Management System
 Install the required dependencies:
 
 - [Java 17 runtime environment (SE JRE)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [Gradle 7.3+](https://gradle.org/releases/) (the below versions won't support integration test framework)
+- [Gradle v7.5.1](https://gradle.org/releases/)
 
 ## Configure
 
