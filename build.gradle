@@ -58,7 +58,7 @@ repositories {
  See more: https://docs.gradle.org/current/userguide/gradle_wrapper.html
 */
 tasks.named('wrapper') {
-  gradleVersion = '7.5.1';
+  gradleVersion = '7.6';
   distributionType = Wrapper.DistributionType.ALL
 }
 
@@ -127,7 +127,7 @@ testing {
       dependencies {
         // Adds a dependency on the src code of the application to the integrationTest suite targets.
         // By default, only the built-in test suite will automatically have a dependency on the src code.
-        implementation project
+        implementation project()
         implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.+'
         implementation 'com.amazonaws:aws-java-sdk-iotroborunner:1.12.+'
         implementation 'org.apache.commons:commons-lang3:3.+'
