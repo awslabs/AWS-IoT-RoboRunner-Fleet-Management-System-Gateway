@@ -4,8 +4,5 @@
 .vscode/
 /build
 /buildSrc/build/
-/gradle/
-/gradlew
-/gradlew.bat
 /wrapper/
 /bin
