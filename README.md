@@ -7,7 +7,6 @@ This package contains sample code for AWS IoT RoboRunner Fleet Management System
 Install the required dependencies:
 
 - [Java 17 runtime environment (SE JRE)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
-- [Gradle v7.6](https://gradle.org/releases/)
 
 ## Configure
 
@@ -20,15 +19,15 @@ To be able to run integration tests, change the configuration files in the `inte
 To build the package
 
 ```bash
-# If building first time or upgrading gradle version, run the following to create
-# a gradle wrapper.
-gradle wrapper
+# The application is using Gradle and `Gradle Wrapper`. The associated files are provided as part of the repo
+# and can be directly used to build the application.
 
-# After wrapper was created/updated, you can always use the following for MacOs/Linux
+# To build the application on MacOs/Linux
 ./gradlew build
 
 # To do a clean build, you can run the following for MacOs/Linux
 ./graldew clean build
+
 ```
 To build/test the application with Windows, use the `./gradlew.bat` instead of `./gradlew`.
 
