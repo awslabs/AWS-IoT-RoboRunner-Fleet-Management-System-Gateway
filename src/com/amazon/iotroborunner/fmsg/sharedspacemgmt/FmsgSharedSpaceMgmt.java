@@ -29,6 +29,7 @@ import static com.amazon.iotroborunner.fmsg.utils.sharedspace.SharedSpaceUtils.c
 import static com.amazon.iotroborunner.fmsg.utils.sharedspace.SharedSpaceUtils.verifyWorkerHoldsLockForSharedSpace;
 
 import com.amazon.iotroborunner.fmsg.clients.AmazonDynamoDbClientProvider;
+import com.amazon.iotroborunner.fmsg.clients.AwsKmsClientProvider;
 import com.amazon.iotroborunner.fmsg.clients.IotRoboRunnerJavaClientProvider;
 import com.amazon.iotroborunner.fmsg.config.FmsgCoreConfiguration;
 import com.amazon.iotroborunner.fmsg.connectors.FmsConnector;
@@ -54,6 +55,7 @@ import com.amazonaws.services.iotroborunner.model.Destination;
 import com.amazonaws.services.iotroborunner.model.DestinationState;
 import com.amazonaws.services.iotroborunner.model.ListDestinationsRequest;
 import com.amazonaws.services.iotroborunner.model.UpdateDestinationRequest;
+import com.amazonaws.services.kms.AWSKMS;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -73,6 +75,7 @@ public final class FmsgSharedSpaceMgmt {
     private final ScheduledExecutorService executorService;
     private final AmazonDynamoDB dynamoDbClient;
     private final SharedSpaceManagementPriorityQueue priorityQueue;
+    private final AWSKMS kmsClient;
     private Map<String, FmsConnector> connectorsByWorkerFleet;
 
     private static final int ZERO_SECOND_DELAY = 0;
@@ -95,6 +98,7 @@ public final class FmsgSharedSpaceMgmt {
             PRIORITY_QUEUE_TABLE_NAME,
             new DynamoDBMapper(this.dynamoDbClient)
         );
+        this.kmsClient = new AwsKmsClientProvider().getAmazonKmsClient(config.getAwsRegion());
     }
 
     /**
@@ -111,6 +115,7 @@ public final class FmsgSharedSpaceMgmt {
                                @NonNull final ScheduledExecutorService executorService,
                                @NonNull final AWSIoTRoboRunner roboRunnerClient,
                                @NonNull final AmazonDynamoDB dynamoDbClient,
+                               @NonNull final AWSKMS kmsClient,
                                @NonNull final SharedSpaceManagementPriorityQueue priorityQueue,
                                @NonNull final Map<String, FmsConnector> connectorsByWorkerFleet) {
         this.siteArn = config.getSiteArn();
@@ -121,6 +126,7 @@ public final class FmsgSharedSpaceMgmt {
         this.priorityQueue = priorityQueue;
         this.connectorsByWorkerFleet = connectorsByWorkerFleet;
         this.dynamoDbClient = dynamoDbClient;
+        this.kmsClient = kmsClient;
     }
 
     /**
@@ -128,7 +134,8 @@ public final class FmsgSharedSpaceMgmt {
      */
     public void startSharedSpaceMgmt(@NonNull final Map<String, FmsConnector> connectorsByWorkerFleet) {
         log.info("Verifying that {} table has been set up.", PRIORITY_QUEUE_TABLE_NAME);
-        PriorityQueueUtils.createPriorityQueueIfMissing(this.dynamoDbClient, new DynamoDBMapper(this.dynamoDbClient));
+        PriorityQueueUtils.createPriorityQueueIfMissing(this.dynamoDbClient, new DynamoDBMapper(this.dynamoDbClient),
+            this.kmsClient);
 
         log.info("Starting Shared Space Management with {} connectors", connectorsByWorkerFleet.size());
 

@@ -50,6 +50,8 @@ import com.amazonaws.services.dynamodbv2.model.TimeToLiveDescription;
 import com.amazonaws.services.dynamodbv2.model.TimeToLiveSpecification;
 import com.amazonaws.services.dynamodbv2.model.TimeToLiveStatus;
 import com.amazonaws.services.dynamodbv2.model.UpdateTimeToLiveRequest;
+import com.amazonaws.services.kms.AWSKMS;
+import com.amazonaws.services.kms.model.AliasListEntry;
 import com.amazonaws.waiters.WaiterParameters;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -119,7 +121,8 @@ public final class PriorityQueueUtils {
      * @param mapper DynamoDB mapper
      */
     public static void createPriorityQueueIfMissing(@NonNull final AmazonDynamoDB client,
-                                                    @NonNull final DynamoDBMapper mapper) {
+                                                    @NonNull final DynamoDBMapper mapper,
+                                                    @NonNull final AWSKMS kmsClient) {
         doesTableExist(client, PRIORITY_QUEUE_TABLE_NAME).ifPresentOrElse(
             tableDescription -> {
                 log.info("Found {} table. Verifying the table is constructed correctly", PRIORITY_QUEUE_TABLE_NAME);
@@ -132,6 +135,11 @@ public final class PriorityQueueUtils {
                     PRIORITY_QUEUE_TABLE_NAME);
             },
             () -> {
+                if (!cmkExistsForPriorityQueue(kmsClient, CUSTOMER_MANAGED_CMK_ALIAS)) {
+                    throw new IllegalStateException(
+                        "The required CMK alias does not exist in AWS KMS. We're unable to create a "
+                            + "priority queue without it due to AWS best practices.");
+                }
                 log.info("Creating the {} table", PRIORITY_QUEUE_TABLE_NAME);
                 createPriorityQueue(client, mapper);
             }
@@ -291,5 +299,18 @@ public final class PriorityQueueUtils {
             default:
                 break;
         }
+    }
+
+    /**
+     * Checks if the CMK exists for the priority queue.
+     *
+     * @param kmsClient A KMS client to access KMS resources
+     * @param kmsAlias  The alias name to search for in AWS KMS
+     * @return          True if a key exists with the alias, false otherwise
+     */
+    private static boolean cmkExistsForPriorityQueue(@NonNull final AWSKMS kmsClient, @NonNull final String kmsAlias) {
+        final List<AliasListEntry> aliasEntries = kmsClient.listAliases().getAliases();
+
+        return aliasEntries.stream().filter(entry -> entry.getAliasName().equals(kmsAlias)).findFirst().isPresent();
     }
 }

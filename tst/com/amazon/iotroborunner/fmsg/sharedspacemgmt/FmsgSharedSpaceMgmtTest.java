@@ -61,6 +61,7 @@ import com.amazonaws.services.iotroborunner.model.Destination;
 import com.amazonaws.services.iotroborunner.model.DestinationState;
 import com.amazonaws.services.iotroborunner.model.ListDestinationsRequest;
 import com.amazonaws.services.iotroborunner.model.ListDestinationsResult;
+import com.amazonaws.services.kms.AWSKMS;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.Level;
@@ -92,6 +93,8 @@ public class FmsgSharedSpaceMgmtTest {
     private SharedSpaceManagementPriorityQueue priorityQueue;
     @Mock
     private AmazonDynamoDB dynamoDbClient;
+    @Mock
+    private AWSKMS mockKmsClient;
 
     private FmsgSharedSpaceMgmt classUnderTest;
 
@@ -129,7 +132,7 @@ public class FmsgSharedSpaceMgmtTest {
     @BeforeEach
     public void initializeTestClass() {
         classUnderTest = new FmsgSharedSpaceMgmt(configs, this.executorService, roboRunnerClient, dynamoDbClient,
-            priorityQueue, connectorsByWorkerFleet);
+            mockKmsClient, priorityQueue, connectorsByWorkerFleet);
     }
 
     /**
