@@ -23,8 +23,10 @@ import static com.amazon.iotroborunner.fmsg.constants.PriorityQueueConstants.PRI
 import static com.amazon.iotroborunner.fmsg.utils.sharedspace.PriorityQueueUtils.createDynamoDbQuery;
 import static com.amazon.iotroborunner.fmsg.utils.sharedspace.PriorityQueueUtils.doesTableExist;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +62,9 @@ import com.amazonaws.services.dynamodbv2.model.TimeToLiveDescription;
 import com.amazonaws.services.dynamodbv2.model.TimeToLiveStatus;
 import com.amazonaws.services.dynamodbv2.model.UpdateTimeToLiveRequest;
 import com.amazonaws.services.dynamodbv2.waiters.AmazonDynamoDBWaiters;
+import com.amazonaws.services.kms.AWSKMS;
+import com.amazonaws.services.kms.model.AliasListEntry;
+import com.amazonaws.services.kms.model.ListAliasesResult;
 import com.amazonaws.waiters.Waiter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
@@ -89,6 +94,8 @@ public class PriorityQueueUtilsTest {
     private AmazonDynamoDB mockClient;
     @Mock
     private DynamoDBMapper mockMapper;
+    @Mock
+    private AWSKMS mockKmsClient;
     @Captor
     ArgumentCaptor<UpdateTimeToLiveRequest> updateRequestCaptor;
 
@@ -185,7 +192,7 @@ public class PriorityQueueUtilsTest {
         final DescribeTableResult tableResult = new DescribeTableResult().withTable(tableDescription);
         when(mockClient.describeTable(any(DescribeTableRequest.class))).thenReturn(tableResult);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogContainsMessage(String.format("%s table passed validation", PRIORITY_QUEUE_TABLE_NAME));
     }
@@ -203,7 +210,7 @@ public class PriorityQueueUtilsTest {
         final DescribeTableResult tableResult = new DescribeTableResult().withTable(tableDescription);
         when(mockClient.describeTable(any(DescribeTableRequest.class))).thenReturn(tableResult);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogContainsMessage(String.format("The %s table is incorrectly configured. Please "
             + "delete and start again", PRIORITY_QUEUE_TABLE_NAME));
@@ -222,7 +229,7 @@ public class PriorityQueueUtilsTest {
         final DescribeTableResult tableResult = new DescribeTableResult().withTable(tableDescription);
         when(mockClient.describeTable(any(DescribeTableRequest.class))).thenReturn(tableResult);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogStartsWith("The number of attribute definitions does not match the Shared Space "
             + "Management requirement.");
@@ -241,7 +248,7 @@ public class PriorityQueueUtilsTest {
         final DescribeTableResult tableResult = new DescribeTableResult().withTable(tableDescription);
         when(mockClient.describeTable(any(DescribeTableRequest.class))).thenReturn(tableResult);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogStartsWith("The number of key schema elements does not match the existing table.");
     }
@@ -257,7 +264,7 @@ public class PriorityQueueUtilsTest {
         final DescribeTableResult tableResult = new DescribeTableResult().withTable(tableDescription);
         when(mockClient.describeTable(any(DescribeTableRequest.class))).thenReturn(tableResult);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogStartsWith("The encryption key does not match Shared Space Management guidelines.");
     }
@@ -271,7 +278,7 @@ public class PriorityQueueUtilsTest {
         final DescribeTableResult tableResult = new DescribeTableResult().withTable(tableDescription);
         when(mockClient.describeTable(any(DescribeTableRequest.class))).thenReturn(tableResult);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogStartsWith("The encryption key does not match Shared Space Management guidelines.");
     }
@@ -286,7 +293,7 @@ public class PriorityQueueUtilsTest {
         final DescribeTableResult tableResult = new DescribeTableResult().withTable(tableDescription);
         when(mockClient.describeTable(any(DescribeTableRequest.class))).thenReturn(tableResult);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogStartsWith("The encryption key does not match Shared Space Management guidelines.");
     }
@@ -299,18 +306,37 @@ public class PriorityQueueUtilsTest {
             .withBillingMode(BillingMode.PAY_PER_REQUEST);
         final DescribeTimeToLiveResult disabledDescribeResult = new DescribeTimeToLiveResult()
             .withTimeToLiveDescription(new TimeToLiveDescription().withTimeToLiveStatus(TimeToLiveStatus.DISABLED));
+        final AliasListEntry aliasEntry = new AliasListEntry().withAliasName(CUSTOMER_MANAGED_CMK_ALIAS);
+        final List<AliasListEntry> entries = List.of(aliasEntry);
+        final ListAliasesResult mockRes = mock(ListAliasesResult.class);
         when(mockClient.describeTimeToLive(any(DescribeTimeToLiveRequest.class))).thenReturn(disabledDescribeResult);
         when(mockMapper.generateCreateTableRequest(PriorityQueueRecord.class)).thenReturn(createTableRequest);
         when(mockClient.waiters()).thenReturn(waiters);
         when(waiters.tableExists()).thenReturn(waiter);
         when(mockClient.describeTable(any(DescribeTableRequest.class)))
             .thenThrow(new ResourceNotFoundException("missing table"));
+        when(mockKmsClient.listAliases()).thenReturn(mockRes);
+        when(mockRes.getAliases()).thenReturn(entries);
 
-        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper);
+        PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
 
         mockedAppender.assertLogContainsMessage(String.format("Created %s table", PRIORITY_QUEUE_TABLE_NAME));
         verify(mockClient).createTable(any(CreateTableRequest.class));
         verify(mockClient).updateTimeToLive(updateRequestCaptor.capture());
     }
 
+    @Test
+    public void given_noTableAndCmkMissing_when_createPriorityQueueIfMissing_then_throwException() {
+        final AliasListEntry aliasEntry = new AliasListEntry().withAliasName("aliasNoHereTryAgain");
+        final List<AliasListEntry> entries = List.of(aliasEntry);
+        final ListAliasesResult mockRes = mock(ListAliasesResult.class);
+        when(mockClient.describeTable(any(DescribeTableRequest.class)))
+            .thenThrow(new ResourceNotFoundException("missing table"));
+        when(mockKmsClient.listAliases()).thenReturn(mockRes);
+        when(mockRes.getAliases()).thenReturn(entries);
+            
+        assertThrows(IllegalStateException.class, () -> {
+            PriorityQueueUtils.createPriorityQueueIfMissing(mockClient, mockMapper, mockKmsClient);
+        });
+    }
 }
